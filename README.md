@@ -52,5 +52,8 @@ Within the current demonstration, there already is a CSS variable for `x+y` call
 
 As you can see, it can get pretty complicated, very fast... The above is a very basic example, and can be optimized further by refactoring certain values into one another.
 
+## How can this be optimized? ##
+The simplest way is to reduce the number of `var()` references in your calculations. Treat this as a lesson in algebra and find ways of consolidating the `var()` references, substituting known (as opposed to dynamic) values for variables. For example substituting `--eps` for 0.1 and variables like `var(--xpyp1)` and `var(--xpym1)` with `var(--xpy) + 1` and `var(--xpy) - 1`. The more substitutions you make with known static values, the more likely you will find that certain variables can be merged, consolidated or eliminated altogether.
+
 ## So if it's that complicated, why bother? ##
 There are projects out there that push the limits of the encompassing environment that the projects inhabit, like creating a fully functional Gameboy with Pokemon Red in Minecraft using a modified texture pack, or creating Snakes and Ladders in CSS and HTML or creating a Linux emulator in pure JavaScript. This is a similar experiment to see the limits of what can be done to push the boundaries of what certain technologies can do based on the curernt limitations. Get inspired and see for yourself!
