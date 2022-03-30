@@ -1,0 +1,253 @@
+:root {
+  --eps: 0.1; 
+  /* Error precision limit, used for calculating GE function, thus enabling other functions to be calculated. Make this value even smaller to deal with finer level decimals. 
+  
+  By convention I tend to use about 10% of the finest level of precision for the EPS, so with integers the EPS is 0.1, if the finest level of precision is 0.1, an EPS of 0.01 is used, etc.*/
+}
+
+.x[value="-5"]:checked ~ * {
+  --x: -5;
+}
+.x[value="-4"]:checked ~ * {
+  --x: -4;
+}
+.x[value="-3"]:checked ~ * {
+  --x: -3;
+}
+.x[value="-2"]:checked ~ * {
+  --x: -2;
+}
+.x[value="-1"]:checked ~ * {
+  --x: -1;
+}
+.x[value="0"]:checked ~ * {
+  --x: 0;
+}
+.x[value="1"]:checked ~ * {
+  --x: 1;
+}
+.x[value="2"]:checked ~ * {
+  --x: 2;
+}
+.x[value="3"]:checked ~ * {
+  --x: 3;
+}
+.x[value="4"]:checked ~ * {
+  --x: 4;
+}
+.x[value="5"]:checked ~ * {
+  --x: 5;
+}
+.y[value="-5"]:checked ~ * {
+  --y: -5;
+}
+.y[value="-4"]:checked ~ * {
+  --y: -4;
+}
+.y[value="-3"]:checked ~ * {
+  --y: -3;
+}
+.y[value="-2"]:checked ~ * {
+  --y: -2;
+}
+.y[value="-1"]:checked ~ * {
+  --y: -1;
+}
+.y[value="0"]:checked ~ * {
+  --y: 0;
+}
+.y[value="1"]:checked ~ * {
+  --y: 1;
+}
+.y[value="2"]:checked ~ * {
+  --y: 2;
+}
+.y[value="3"]:checked ~ * {
+  --y: 3;
+}
+.y[value="4"]:checked ~ * {
+  --y: 4;
+}
+.y[value="5"]:checked ~ * {
+  --y: 5;
+}
+
+.x:checked ~ *,
+.y:checked ~ * {
+
+  /* Function Calculations */  
+  
+  /* x and y already defined, but define (x+1), (x-1), (y+1), (y-1), (x+y), (x-y), (x+y+1), (x+y-1), (x-y+1), and (x-y-1),*/ 
+  
+  --xp1: calc(var(--x) + 1);
+  --xm1: calc(var(--x) - 1);
+  --yp1: calc(var(--y) + 1);
+  --ym1: calc(var(--y) - 1);
+  --xpy: calc(var(--x) + var(--y));
+  --xmy: calc(var(--x) - var(--y));
+  --xpyp1: calc(var(--x) + var(--y) + 1);
+  --xpym1: calc(var(--x) + var(--y) - 1);
+  --xmyp1: calc(var(--x) - var(--y) + 1);
+  --xmym1: calc(var(--x) - var(--y) - 1);
+  
+  /* Maximum and Minimum functions */
+  --min_x_y: min(var(--x), var(--y));
+  --max_x_y: max(var(--x), var(--y));
+  
+  /* Absolute Functions */
+  --abs_x: calc(var(--x) - 2 * min(var(--x), 0));
+  --abs_y: calc(var(--y) - 2 * min(var(--y), 0));
+
+  --abs_xp1: calc(var(--xp1) - 2 * min(var(--xp1), 0));
+  --abs_yp1: calc(var(--yp1) - 2 * min(var(--yp1), 0));
+  --abs_xm1: calc(var(--xm1) - 2 * min(var(--xm1), 0));
+  --abs_ym1: calc(var(--ym1) - 2 * min(var(--ym1), 0));
+  --abs_xpy: calc(var(--xpy) - 2 * min(var(--xpy), 0));
+  --abs_xmy: calc(var(--xmy) - 2 * min(var(--xmy), 0));
+  --abs_xpyp1: calc(var(--xpyp1) - 2 * min(var(--xpyp1), 0));
+  --abs_xpym1: calc(var(--xpym1) - 2 * min(var(--xpym1), 0));
+  --abs_xmyp1: calc(var(--xmyp1) - 2 * min(var(--xmyp1), 0));
+  --abs_xmym1: calc(var(--xmym1) - 2 * min(var(--xmym1), 0));
+
+  /*
+    Is Zero Functions 
+    isZero(x) = (x * x - abs(x + 1) * abs(x - 1) + 1) / 2
+  */
+  --zero_x: calc(1 - (var(--x) * var(--x) - var(--abs_xp1) * var(--abs_xm1) + 1) / 2);
+  --zero_y: calc(1 - (var(--y) * var(--y) - var(--abs_yp1) * var(--abs_ym1) + 1) / 2);
+
+  /* 
+    Equality Function
+    eq(x, y) = isZero(x - y) = 
+    ((x-y) * (x-y) - abs(x-y+1) * abs(x-y-1) + 1) / 2
+  */
+  --eq_x_y: calc(1 - (var(--xmy) * var(--xmy) - var(--abs_xmyp1) * var(--abs_xmym1) + 1) / 2);
+
+  /* Greater Than Or Equal function 
+    gte(x, y) = (max(x-y, -eps) + eps) / (abs(x-y) + eps)
+  */
+  --ge_x_y: calc((max(var(--xmy), 0 - var(--eps)) + var(--eps)) / (var(--abs_xmy) + var(--eps)));
+
+  /* Less Than Or Equal function
+    lte(x, y) = gte(y, x)
+  */
+  --le_x_y: calc((max(0 - var(--xmy), 0 - var(--eps)) + var(--eps)) / (var(--abs_xmy) + var(--eps)));
+
+  /* Greater Than function, simpler than you think...
+    gt(x, y) = ge(x, y) - eq(x, y)
+  */
+  --gt_x_y: calc(var(--ge_x_y) - var(--eq_x_y));
+  
+  /* Greater Than Zero
+    gz(x) = ge(x, 0) - eq(x, 0)
+          = ge(x, 0) - isZero(x)
+  */
+  --gt_x_0: calc((max(var(--x), 0 - var(--eps)) + var(--eps)) / (var(--abs_x) + var(--eps)) - var(--zero_x));
+  --gt_y_0: calc((max(var(--y), 0 - var(--eps)) + var(--eps)) / (var(--abs_y) + var(--eps)) - var(--zero_y));
+    
+  /* Less Than function, also simpler than you think...
+    lt(x, y) = le(x, y) - eq(x, y)
+  */
+  --lt_x_y: calc(var(--le_x_y) - var(--eq_x_y));
+  
+  /* Less Than Zero
+    lz(x) = le(x, 0) - eq(x, 0)
+          = le(x, 0) - isZero(x)
+  */
+   --lt_x_0: calc((max(0 - var(--x), 0 - var(--eps)) + var(--eps)) / (var(--abs_x) + var(--eps)) - var(--zero_x));
+   --lt_y_0: calc((max(0 - var(--y), 0 - var(--eps)) + var(--eps)) / (var(--abs_y) + var(--eps)) - var(--zero_y));
+
+  /* SGN Function, SGN(x) returns -1 if x < 0, 0 if x = 0, and 1 if x > 0
+  sgn(x) = gz(x) - lz(x)
+  */
+  
+  --sgn_x: calc(var(--gt_x_0) - var(--lt_x_0));
+  --sgn_y: calc(var(--gt_y_0) - var(--lt_y_0));
+  
+  /* Counters */
+  counter-reset: xNumber var(--x) 
+                 yNumber var(--y) 
+                 minXY var(--min_x_y) 
+                 maxXY var(--max_x_y)
+                 absX var(--abs_x)
+                 absY var(--abs_y)
+                 zeroX var(--zero_x)
+                 zeroY var(--zero_y)
+                 eqXY var(--eq_x_y)
+                 geXY var(--ge_x_y)
+                 leXY var(--le_x_y)
+                 gtXY var(--gt_x_y)
+                 ltXY var(--lt_x_y)
+                 Ylt0 var(--lt_y_0)
+                 Xgt0 var(--gt_x_0)
+                 Ygt0 var(--gt_y_0)
+                 Xlt0 var(--lt_x_0)
+                 sgnX var(--sgn_x)
+                 sgnY var(--sgn_y)
+    ;
+}
+
+.x_value:after {
+  content: " " counter(xNumber);
+}
+.y_value:after {
+  content: " " counter(yNumber);
+}
+.min_x_y:after {
+  content: " " counter(minXY);
+}
+.max_x_y:after {
+  content: " " counter(maxXY);
+}
+.abs_x:after {
+  content: " " counter(absX);
+}
+.abs_y:after {
+  content: " " counter(absY);
+}
+.zero_x:after {
+  content: " " counter(zeroX);
+}
+.zero_y:after {
+  content: " " counter(zeroY);
+}
+.eq_x_y:after {
+  content: " " counter(eqXY);
+}
+.x_ge_y:after {
+  content: " " counter(geXY);
+}
+.x_le_y:after {
+  content: " " counter(leXY);
+}
+.x_gt_y:after {
+  content: " " counter(gtXY);
+}
+.x_lt_y:after {
+  content: " " counter(ltXY);
+}
+
+.x_gt_0:after {
+  content: " " counter(Xgt0);
+}
+.y_gt_0:after {
+  content: " " counter(Ygt0);
+}
+
+.x_lt_0:after {
+  content: " " counter(Xlt0);
+}
+.y_lt_0:after {
+  content: " " counter(Ylt0);
+}
+
+.sgn_x:after {
+  content: " " counter(sgnX);
+}
+.sgn_y:after {
+  content: " " counter(sgnY);
+}
+
+.results {
+  margin-top: 1rem;
+}
