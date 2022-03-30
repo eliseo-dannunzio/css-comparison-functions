@@ -15,4 +15,42 @@ To create the `GE()` function, a certain amount of error precision is required t
 ## Are there any limits to this? ##
 As CSS `calc()` functions are limited in browsers to a certain limit (roughly 100 nested `calc()` calls), and calculated CSS variables reference all previously derived calculations and thus fall under this nested `calc()` limit; there may be situations where a perfectly correct calculation may halt due to the limitations of the browser. The only thing you can do is find ways of optimizing your CSS code accordingly.
 
-Another limitation is that these functions are not quite the "Define Once, Use multiple times" type like a standard JavaScript function. The examples in this repo are re-calculated once the radio buttons are updated and as a result the output is re-displayed with the updated values. If you're planning on implementing a similar function that performs the same comparison elsewhere, you can't reference the original function call. You have to define another instance of the comparison code and reference that new instance.
+Another limitation is that these functions are not quite the "Define Once, Use multiple times" type like a standard JavaScript function. The examples in this repo are re-calculated once the radio buttons are updated and as a result the output is re-displayed with the updated values. If you're planning on implementing a similar function that performs the same comparison elsewhere, you can't reference the original function call. You have to define another instance of the comparison code and reference that new instance. Again the previous premise in the paragraph above applies.
+
+## How can I implement these functions? ##
+As you're creating your code, you have to think ahead with what you're planning to do. Take for example the following code:
+```
+var x = 5;
+var y = -3;
+if (x + y > 0) {
+  z = 10;
+} else {
+  z = 20;
+}
+```
+
+Fairly easy in JavaScript. But in the case of CSS you would need to define all relevant values and the respective calculated functions. All comparison functions will return a 1 if it satisfies the condition, and 0 if it doesn't satisfy the condition, enabling crude binary assignment values like how branchless coding works. You also have to work out your result first and then work backwards to determine what you need to define in order to derive your result at the end...
+
+Within the current demonstration, there already is a CSS variable for `x+y` called `--xpy` which could be used to calculate the value of `z` in the above example as `--z` as follows:
+
+```
+:root {
+  --eps: 0.1;
+}
+/* However --x and --y are defined from various CSS events is entered here... */
+
+--xpy: calc(var(--x) + var(--y));
+--xpyp1: calc(var(--xpy) + 1);
+--xpym1: calc(var(--xpy) - 1);
+--abs_xpy: calc(var(--xpy) - 2 * min(var(--xpy), 0));
+--abs_xpyp1: calc(var(--xpyp1) - 2 * min(var(--xpyp1), 0));
+--abs_xpym1: calc(var(--xpym1) - 2 * min(var(--xpym1), 0));
+--zero_xpy: calc(1 - (var(--xpy) * var(--xpy) - var(--abs_xpyp1) * var(--abs_xpym1) + 1) / 2);
+--XpYgt0: calc((max(var(--xpy), 0 - var(--eps)) + var(--eps)) / (var(--abs_xpy) + var(--eps)) - var(--zero_xpy));
+--z: calc(10 * var(--XpYgt0) + 20 * (1 - var(--XpYgt0)));
+```
+
+As you can see, it can get pretty complicated, very fast... The above is a very basic example, and can be optimized further by refactoring certain values into one another.
+
+## So if it's that complicated, why bother? ##
+There are projects out there that push the limits of the encompassing environment that the proejcts inhabit, like creating a fully functional Gameboy with Pokemon Red in Minecraft using a modified texture pack, or creating Snakes and Ladders in CSS and HTML or creating a Linux emulator in pure JavaScript. This is a similar experiment to see the limits of what can be done to push the boundaries of what certain technologies can do based on the curernt limitations. Get inspired and see for yourself!
