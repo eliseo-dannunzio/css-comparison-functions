@@ -1,5 +1,7 @@
 # css-comparison-functions
 
+Live Demo: https://codepen.io/eliseodannunzio/pen/xxprEJZ
+
 ## So what's this all about? ##
 Ever wonder if there was a way to implement value specific comparisons based on certain values of CSS variables?
 The supplied code in this repo is a basic foundation for implementing such comparisons, all in pure CSS, no JS!
