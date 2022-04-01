@@ -2,6 +2,8 @@
 
 Live Demo: https://codepen.io/eliseodannunzio/pen/xxprEJZ
 
+Please feel free to reach out to me at eliseo.dannunzio@gmail.com to discuss the inner workings of this project!
+
 ## So what's this all about? ##
 Ever wonder if there was a way to implement value specific comparisons based on certain values of CSS variables?
 The supplied code in this repo is a basic foundation for implementing such comparisons, all in pure CSS, no JS!
