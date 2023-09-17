@@ -1,8 +1,14 @@
 :root {
   --eps: 0.1; 
-  /* Error precision limit, used for calculating GE function, thus enabling other functions to be calculated. Make this value even smaller to deal with finer level decimals. 
+  /*  Error precision limit, used for calculating GE function, thus enabling other functions 
+      to be calculated. Make this value even smaller to deal with finer level decimals. 
   
-  By convention I tend to use about 10% of the finest level of precision for the EPS, so with integers the EPS is 0.1, if the finest level of precision is 0.1, an EPS of 0.01 is used, etc.*/
+      By convention I tend to use about 10% of the finest level of precision for the EPS, 
+      so with integers the EPS is 0.1, if the finest level of precision is 0.1, an EPS of 0.01 is used, etc.*/
+}
+
+body {
+  font-family: 'Oxanium', cursive;
 }
 
 .x[value="-5"]:checked ~ * {
@@ -110,35 +116,39 @@
   --abs_xmym1: calc(var(--xmym1) - 2 * min(var(--xmym1), 0));
 
   /*
-    Is Zero Functions 
+    Is Zero Functions, simply returns 1 if X is zero, and returns 0 if X is non-zero
     isZero(x) = (x * x - abs(x + 1) * abs(x - 1) + 1) / 2
   */
   --zero_x: calc(1 - (var(--x) * var(--x) - var(--abs_xp1) * var(--abs_xm1) + 1) / 2);
   --zero_y: calc(1 - (var(--y) * var(--y) - var(--abs_yp1) * var(--abs_ym1) + 1) / 2);
 
   /* 
-    Equality Function
+    Equality Function, returns 1 if X = Y, i.e. if x-y is zero; and returns 0 if (x-y) is non-zero
     eq(x, y) = isZero(x - y) = 
     ((x-y) * (x-y) - abs(x-y+1) * abs(x-y-1) + 1) / 2
   */
   --eq_x_y: calc(1 - (var(--xmy) * var(--xmy) - var(--abs_xmyp1) * var(--abs_xmym1) + 1) / 2);
 
-  /* Greater Than Or Equal function 
+  /* Greater Than Or Equal function, returns 1 if x >= y, 0 if x < y
     gte(x, y) = (max(x-y, -eps) + eps) / (abs(x-y) + eps)
   */
   --ge_x_y: calc((max(var(--xmy), 0 - var(--eps)) + var(--eps)) / (var(--abs_xmy) + var(--eps)));
 
-  /* Less Than Or Equal function
+  /* Less Than Or Equal function, returns 1 if x <= y, 0 if x > y
     lte(x, y) = gte(y, x)
   */
   --le_x_y: calc((max(0 - var(--xmy), 0 - var(--eps)) + var(--eps)) / (var(--abs_xmy) + var(--eps)));
 
   /* Greater Than function, simpler than you think...
     gt(x, y) = ge(x, y) - eq(x, y)
+    returns 1 if x > y, 0 if x <= y
   */
   --gt_x_y: calc(var(--ge_x_y) - var(--eq_x_y));
+  /* Alternatively, gt(x,y) = 1 - lte(x, y)
+    Therefore: --gt_x_y: calc(1 - var(--le_x_y));
+  */
   
-  /* Greater Than Zero
+  /* Greater Than Zero, returns 1 if x > 0, 0 if x <= 0
     gz(x) = ge(x, 0) - eq(x, 0)
           = ge(x, 0) - isZero(x)
   */
@@ -147,12 +157,17 @@
     
   /* Less Than function, also simpler than you think...
     lt(x, y) = le(x, y) - eq(x, y)
+    returns 1 if x < y, 0 if x >= y
   */
   --lt_x_y: calc(var(--le_x_y) - var(--eq_x_y));
+  /* Alternatively, lt(x,y) = 1 - gte(x, y)
+    Therefore: --lt_x_y: calc(1 - var(--ge_x_y));
+  */
   
   /* Less Than Zero
     lz(x) = le(x, 0) - eq(x, 0)
           = le(x, 0) - isZero(x)
+    returns 1 if x < 0, 0 if x >= 0
   */
    --lt_x_0: calc((max(0 - var(--x), 0 - var(--eps)) + var(--eps)) / (var(--abs_x) + var(--eps)) - var(--zero_x));
    --lt_y_0: calc((max(0 - var(--y), 0 - var(--eps)) + var(--eps)) / (var(--abs_y) + var(--eps)) - var(--zero_y));
